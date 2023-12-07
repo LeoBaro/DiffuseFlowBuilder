@@ -1,0 +1,4 @@
+name: diffflow
+dependencies:
+  - python >= 3.10, < 3.11
+  - pip == 23.1.2
