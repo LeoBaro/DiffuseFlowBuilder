@@ -33,7 +33,6 @@ class ComponentBase(ABC):
         for uns_k in unsupported_kwargs:
             if uns_k in keys:
                 kwargs.pop(uns_k)
-        return kwargs
     
     def use_input_from_previous_step(self):
         if "use_input_from_previous_step" not in self.kwargs:

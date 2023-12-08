@@ -40,6 +40,8 @@ class InPainting(ComponentBase):
 
         if kwargs["use_image_from_previous_step"]:
             image = input_obj.images[-1]
+        else:
+            image = load_image(str(kwargs["image"]))
 
         # This code will be refactored into a PromptManager class
         prompt = Prompt.from_dict(kwargs["static_prompt"])
@@ -65,14 +67,14 @@ class InPainting(ComponentBase):
                 )
             )
         elif kwargs["mask_image"] is not None:
-            mask_image = load_image(kwargs["mask_image"])
+            mask_image = load_image(str(kwargs["mask_image"]))
 
         kwargs.pop("image")
         kwargs.pop("static_prompt")
         kwargs.pop("mask_image")
 
         return ComponentOutput(
-            images=self.model.inference(image=image, prompt=prompt, mask_image=mask_image, **kwargs),
+            images=self.model.inference(image=image, prompt=prompt.get_str_prompt(), mask_image=mask_image, **kwargs),
             prompts=[prompt]
         )
         

@@ -20,6 +20,16 @@ def test_run_pipeline_sr(data_dir, output_dir):
 
     PipelineRunner().run_pipeline(data_dir / "pipeline.yaml", pipe)
 
+def test_run_pipeline_ip(data_dir, output_dir):
+    data_dir = data_dir / "test_pipeline"
+    output_dir = output_dir / "test_run_pipeline"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    pipe = PipelineBuilder().build_pipeline(data_dir / "pipeline.yaml", "ip_pipeline")
+
+    PipelineRunner().run_pipeline(data_dir / "pipeline.yaml", pipe)
+
+
 def test_run_pipeline_t2i_ip(data_dir, output_dir):
     data_dir = data_dir / "test_pipeline"
     output_dir = output_dir / "test_run_pipeline"
