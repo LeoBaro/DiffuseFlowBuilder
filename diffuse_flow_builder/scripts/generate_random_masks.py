@@ -3,14 +3,27 @@ import random
 import argparse 
 from PIL import Image, ImageDraw
 
+
+def to_yolo(rect_x, rect_y, rect_width, rect_height, w, h):
+    # Calculate normalized coordinates for YOLO annotation
+    x_center = (rect_x + rect_width / 2) / w
+    y_center = (rect_y + rect_height / 2) / h
+    width_normalized = rect_width / w
+    height_normalized = rect_height / h
+    # YOLO annotation format: class_index x_center y_center width height
+    return f"0 {x_center:.6f} {y_center:.6f} {width_normalized:.6f} {height_normalized:.6f}"
+
 def main(args):
     if not os.path.exists(args.o):
         os.makedirs(args.o)
+
 
     for i in range(args.n):
         # Create a black image
         img = Image.new("RGB", (args.wi, args.he), "black")
         draw = ImageDraw.Draw(img)
+    
+        annotations = []  # List to store YOLO annotations for the current image
 
         for _ in range(args.N):
             # Randomly generate rectangle parameters
@@ -27,8 +40,14 @@ def main(args):
             # Draw the rectangle on the image
             draw.rectangle([rect_x, rect_y, rect_x + rect_width, rect_y + rect_height], fill="white")
 
+            annotations.append(to_yolo(rect_x, rect_y, rect_width, rect_height, args.wi, args.he))
+
         # Save the image to the output directory
         img.save(os.path.join(args.o, f"mask_{i}.png"))
+        
+        # Save YOLO annotations to a text file
+        with open(os.path.join(args.o, f"mask_{i}.txt"), "w") as annotation_file:
+            annotation_file.write("\n".join(annotations))
 
 
 def cli():

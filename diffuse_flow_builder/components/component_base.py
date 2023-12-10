@@ -9,6 +9,7 @@ from diffuse_flow_builder.utils.constant import ROOT
 class ComponentBase(ABC):
     def __init__(self, **kwargs):
         self.model_class_name = kwargs["model"]
+        self.seed = kwargs["seed"]
         self.kwargs = kwargs
         self.prompt_randomizer = PromptRandomizer(ROOT / "diffuse_flow_builder" / "default_configs" / "prompts.yaml")
         self.expand_root_dir()
@@ -55,7 +56,8 @@ class ComponentBase(ABC):
             "height",
             "width",
             "num_images_per_prompt",
-            "output_dir"
+            "output_dir",
+            "override_with_recommended_parameters"
         ]
         for param in required_params:
             if param not in self.kwargs:

@@ -1,59 +1,61 @@
 pipelines:
 
-
   ip_pipeline:
     n_runs: 5
-    write_results_after_x_run: 1 # todo
-    save_intermediate_results: False # todo
+    write_results_after_x_run: 1 
+    save_intermediate_results: False 
     distributed: False # todo
     output_format: "png"
+    seed: 42
     steps:
       - name: InPainting
         model: StableDiffusionXL
-        image: /home/leobaro/workspace/labs/DiffuseFlowBuilder/tests/data/test_in_painting/init.png
+        image: $ROOT/tests/data/test_in_painting/bkg_1.png
         use_image_from_previous_step: False
         prompt:
-          prompt_prefix: "$what"
-          prompt_subject: "a realistic drone"
-          prompt_enanchment: "view from far away $enanchment"
+          prompt_prefix: "A graphic of"
+          prompt_subject: "a drone"
+          prompt_enanchment: "viewed from a low angle in a sunny landscape in the afternoon, high quality"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False # the null prompts parts will be initialized with the prompts part from the previous step
         apply_refinement: False
         strength: 0.9
         guidance_scale: 15
-        num_inference_steps: 75
-        height: 512
-        width: 512
+        num_inference_steps: 50
+        height: 1024
+        width: 1024
         override_with_recommended_parameters: True
         num_images_per_prompt: 1 # greater the number, greater the memory requirement
-        mask_image: null
-        use_random_masks: $ROOT/tests/data/test_in_painting/masks_rect
-        output_dir: $ROOT/output
+        mask_image: $ROOT/tests/data/test_in_painting/masks_rect/mask_0.png
+        use_random_masks: null
+        output_dir: $ROOT/output/ip_pipeline
 
   t2i_pipeline:
-    n_runs: 50
-    write_results_after_x_run: 1 # todo
-    save_intermediate_results: False # todo
+    n_runs: 5
+    write_results_after_x_run: 1 
+    save_intermediate_results: False 
     distributed: False # todo
     output_format: "png"
-    steps:
+    seed: 42
 
+    steps:
       - name: TextToImage
         model: StableDiffusionXL
         prompt:
-          prompt_prefix: "Generate a stable, high-resolution image of a"
-          prompt_subject: " nighttime live show. Capture the scene from behind a cheering crowd with a clear view of the stage, which features a black maxi-screen."
-          prompt_enanchment: "cyberpunk style, hyper realistic, 8K"
+          prompt_prefix: "$what"
+          prompt_subject: "a drone, seen fro afar, is flying over $where $when"
+          prompt_enanchment: "$enanchment"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False 
         apply_refinement: False
         strength: 0.85
-        guidance_scale: 15
+        guidance_scale: 20
         num_images_per_prompt: 1
         num_inference_steps: 50
         height: 1024
         width: 1024
-        output_dir: $ROOT/output
+        override_with_recommended_parameters: True
+        output_dir: $ROOT/output/t2i_pipeline
 
   sr_pipeline:
     n_runs: 1
@@ -61,42 +63,45 @@ pipelines:
     save_intermediate_results: False # todo
     distributed: False # todo
     output_format: "png"
-    steps:
+    seed: 42
 
+    steps:
       - name: SuperResolution
         model: StableDiffusion2
         prompt:
           prompt_prefix: "a photo of"
-          prompt_subject: "two person kissing"
-          prompt_enanchment: "cyberpunk style"
+          prompt_subject: "cat"
+          prompt_enanchment: "realistic"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False
         apply_refinement: False
         strength: 0.85
         height: 1024 
         width: 1024        
-        image: $ROOT/tests/data/test_super_resolution/nicco_michi.jpg 
+        image: $ROOT/tests/data/test_super_resolution/low_res_cat.png
         use_image_from_previous_step: False
         guidance_scale: 15
         num_inference_steps: 60
         num_images_per_prompt: 1
-        output_dir: $ROOT/output
+        override_with_recommended_parameters: True
+        output_dir: $ROOT/output/sr_pipeline
 
 
   t2i_ip_pipeline:
-    n_runs: 2
-    write_results_after_x_run: 1 #todo
-    save_intermediate_results: False # todo
+    n_runs: 1
+    write_results_after_x_run: 1
+    save_intermediate_results: True
     distributed: False # todo
     output_format: "png"
-    steps:
+    seed: 42
 
+    steps:
       - name: TextToImage
         model: StableDiffusionXL
         prompt:
           prompt_prefix: "$what"
-          prompt_subject: "$background $view_angle $weather $daytime"
-          prompt_enanchment: "cyberpunk style $enanchment"
+          prompt_subject: "$where $view_angle $weather $when"
+          prompt_enanchment: "$enanchment"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False 
         apply_refinement: False # only applies to StableDiffusionXL model 
@@ -106,7 +111,8 @@ pipelines:
         height: 1024 # StableDiffusionXL works better with 1024, while StableDiffusion2 works better with 512
         width: 1024
         num_images_per_prompt: 1 # greater the number, greater the memory requirement
-        output_dir: $ROOT/output
+        override_with_recommended_parameters: True        
+        output_dir: $ROOT/output/t2i_ip_pipeline
 
       - name: InPainting
         model: StableDiffusionXL
@@ -119,15 +125,16 @@ pipelines:
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: True # the null prompts parts will be initialized with the prompts part from the previous step
         apply_refinement: False
-        strength: 0.85
-        guidance_scale: 12.5
-        num_inference_steps: 50
+        strength: 0.9
+        guidance_scale: 20
+        num_inference_steps: 80
         height: 1024
         width: 1024
         num_images_per_prompt: 1 # greater the number, greater the memory requirement
-        mask_image: null
-        use_random_masks: $ROOT/tests/data/test_in_painting/masks 
-        output_dir: $ROOT/output
+        mask_image: $ROOT/tests/data/test_in_painting/mask.png
+        use_random_masks: null
+        override_with_recommended_parameters: True
+        output_dir: $ROOT/output/t2i_ip_pipeline
 
   
   t2i_sr_pipeline:
@@ -136,8 +143,9 @@ pipelines:
     save_intermediate_results: False # todo
     distributed: False # todo
     output_format: "png"
-    steps:
+    seed: 42
 
+    steps:
       - name: TextToImage
         model: StableDiffusionXL
         prompt:
@@ -150,6 +158,7 @@ pipelines:
         num_inference_steps: 50
         height: 1024
         width: 1024
+        override_with_recommended_parameters: True
         output_dir: $ROOT/output
 
       - name: SuperResolution
@@ -165,4 +174,5 @@ pipelines:
         guidance_scale: 15
         num_inference_steps: 100
         num_images_per_prompt: 1
-        output_dir: $ROOT/output
+        override_with_recommended_parameters: True
+        output_dir: $ROOT/output/t2i_sr_pipeline

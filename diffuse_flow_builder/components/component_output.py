@@ -6,4 +6,6 @@ from PIL import Image
 class ComponentOutput:
     images: list[Image.Image]
     prompts: list[str]
+    comp_name: str
+    kwargs: dict
 

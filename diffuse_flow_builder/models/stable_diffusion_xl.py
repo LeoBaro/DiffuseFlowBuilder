@@ -87,10 +87,10 @@ class StableDiffusionXL(HuggingFaceModel):
             for k,v in StableDiffusionXL.RECOMMENDED_PARAMS.items():
                 kwargs[k] = v
 
-        logger.info("Making inference with prompt='%s' image='%s'", kwargs["prompt"], kwargs["image"])
+        logger.info("Making inference with kwargs='%s'", kwargs)
 
         if self.refiner is None:
-            return self.model(**kwargs).images
+            return self.model(**kwargs).images, kwargs
         else:
             gen_images = self.model(
                 denoising_end=0.8,
@@ -106,4 +106,4 @@ class StableDiffusionXL(HuggingFaceModel):
                 ).images[0] for img in gen_images
             ]
 
-            return images_refined
+            return images_refined, kwargs

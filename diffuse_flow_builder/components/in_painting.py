@@ -59,7 +59,9 @@ class InPainting(ComponentBase):
             mask_image = load_image(
                 os.path.join(
                     kwargs["use_random_masks"],
-                    random.choice(os.listdir(kwargs["use_random_masks"]))
+                    random.choice(
+                        [img for img in os.listdir(kwargs["use_random_masks"]) if img.endswith(".png") or img.endswith(".jpg")]
+                    )
                 )
             )
         elif kwargs["mask_image"] is not None:
@@ -70,9 +72,13 @@ class InPainting(ComponentBase):
         kwargs.pop("prompt")
         kwargs.pop("mask_image")
 
+        images, kwargs = self.model.inference(image=image, prompt=prompt.get_str_prompt(), mask_image=mask_image, **kwargs)
+
         return ComponentOutput(
-            images=self.model.inference(image=image, prompt=prompt.get_str_prompt(), mask_image=mask_image, **kwargs),
-            prompts=[prompt]
+            images=images,
+            prompts=[prompt],
+            comp_name=self.__class__.__name__,
+            kwargs=kwargs
         )
         
     def check_inputs(self):

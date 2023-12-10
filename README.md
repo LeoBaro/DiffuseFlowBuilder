@@ -34,8 +34,8 @@ pipelines:
   t2i_ip_pipeline:
     
     n_runs: 2 # number of times the pipeline will run
-    write_results_after_x_run: 1 # todo be implemented (to avoid output loss in case of a crash)
-    save_intermediate_results: False # todo be implemented (debug purposes)
+    write_results_after_x_run: 1 # to avoid total output loss in case of a crash
+    save_intermediate_results: False # if only the final results of a pipeline must be saved
     distributed: False # todo be implemented (distributed inference)
     output_format: "png"
     
@@ -44,7 +44,7 @@ pipelines:
       - name: TextToImage # The name define the task
         model: StableDiffusionXL # The model to use
         prompt: # prompt is splitted in different parts to allow flexibility with random prompt generation
-          prompt_prefix: "an image of a"
+          prompt_prefix: "$what" # you can define randomization strategies
           prompt_subject: "city skyline"
           prompt_enanchment: "cyberpunk style, hyper realistic, 8K"
         use_prompt_from_previous_step: False # the second step of the pipeline may want to use the output of the previous step

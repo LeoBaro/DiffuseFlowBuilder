@@ -9,9 +9,9 @@ from diffuse_flow_builder.logger import logger
 class PipelineBuilder:
 
     @staticmethod
-    def create_component(component_config: dict) -> ComponentBase:
+    def create_component(seed: int, component_config: dict) -> ComponentBase:
         ComponentClass = getattr(importlib.import_module("diffuse_flow_builder.components"), component_config["name"])
-        return ComponentClass(**component_config)
+        return ComponentClass(seed=seed, **component_config)
 
     @staticmethod
     def build_pipeline(config_path: Path, pipeline_id: str) -> Pipeline:
@@ -24,7 +24,7 @@ class PipelineBuilder:
         
         pipeline_config = p_config["pipelines"][pipeline_id]
         pipe = Pipeline(
-            pipeline_id, 
+            pipeline_id,
             write_results_after_x_run=pipeline_config["write_results_after_x_run"],
             output_format=pipeline_config["output_format"]
         )
@@ -33,6 +33,7 @@ class PipelineBuilder:
         for comp_config in pipeline_config["steps"]:
             pipe.add_component(
                 PipelineBuilder.create_component(
+                    pipeline_config["seed"],
                     comp_config
                 )
             )

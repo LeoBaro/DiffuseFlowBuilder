@@ -4,7 +4,7 @@ what:
   - "A picture of"
   - "A graphic of"
 
-background:
+where:
   - "a lake"
   - "a beach"
   - "a desert"
@@ -12,6 +12,16 @@ background:
   - "a mountain peak"
   - "a city skyline"
   - "a tropical island"
+
+when:
+  - "in the morning"
+  - "in the afternoon"
+  - "during the night"
+  - "at twilight"
+  - "during sunrise"
+  - "during sunset"
+  - "under moonlight"
+
 
 view_angle:
   - "viewed from a low angle"
@@ -25,15 +35,6 @@ weather:
   - "in a rainy day"
   - "in a snowy landscape"
   - "in a gentle drizzle"
-
-daytime:
-  - "in the morning"
-  - "in the afternoon"
-  - "during the night"
-  - "at twilight"
-  - "during sunrise"
-  - "during sunset"
-  - "under moonlight"
 
 enanchment:
   - "ultra detailed"

@@ -54,6 +54,8 @@ class PromptRandomizer:
         return matches
 
     def process_string(self, prompt_part: str):
+        if prompt_part is None:
+            return None
         if "$" not in prompt_part:
             return prompt_part
         words_to_replace = [w.replace("$","") for w in PromptRandomizer.extract_words_starting_with_dollar(prompt_part)]

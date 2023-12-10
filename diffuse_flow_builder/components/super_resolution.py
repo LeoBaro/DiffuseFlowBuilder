@@ -61,9 +61,14 @@ class SuperResolution(ComponentBase):
 
         kwargs.pop("image")
     
+
+        images, kwargs = self.model.inference(image=image, prompt=prompt.get_str_prompt(), **kwargs) 
+
         return ComponentOutput(
-            images=self.model.inference(image=image, prompt=prompt.get_str_prompt(), **kwargs),
-            prompts=[prompt]
+            images=images,
+            prompts=[prompt],
+            comp_name=self.__class__.__name__,
+            kwargs=kwargs
         )
         
 

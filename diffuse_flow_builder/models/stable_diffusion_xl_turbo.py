@@ -65,6 +65,6 @@ class StableDiffusionXLTurbo(HuggingFaceModel):
             for k,v in StableDiffusionXLTurbo.RECOMMENDED_PARAMS.items():
                 kwargs[k] = v
 
-        logger.info("Making inference with prompt='%s' image='%s'", kwargs["prompt"], kwargs["image"])
+        logger.info("Making inference with kwargs='%s'", kwargs)
 
-        return self.model(**kwargs).images
+        return self.model(**kwargs).images, kwargs

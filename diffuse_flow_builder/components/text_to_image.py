@@ -5,6 +5,7 @@ import PIL
 from diffuse_flow_builder.components.component_base import ComponentBase
 from diffuse_flow_builder.components.component_output import ComponentOutput
 from diffuse_flow_builder.prompts.prompt import Prompt
+from diffuse_flow_builder.logger import logger
 
 class TextToImage(ComponentBase):
     """
@@ -25,23 +26,31 @@ class TextToImage(ComponentBase):
         ModelClass = getattr(importlib.import_module("diffuse_flow_builder.models"), kwargs["model"])
 
         self.model = ModelClass("text_to_image", kwargs["apply_refinement"])
+        logger.info("Initialized text_to_image component with seed %s", self.seed)
 
     def __call__(self, input_obj: ComponentOutput = None) -> list[PIL.Image]:
 
         kwargs = self.check_inputs()
 
         ## Prompts : move to superclass
-        prompt = self.prompt_randomizer.from_dict(kwargs["prompt"])
-
+        prompt = self.prompt_randomizer.from_dict(
+            kwargs.pop("prompt")
+        )
+        
         if kwargs["use_prompt_from_previous_step"]:
             prompt = input_obj.prompts[-1]
 
         elif kwargs["combine_prompt_with_previous_step"]:
             prompt = prompt.combine_with(input_obj.prompts[-1])
 
+
+        images, kwargs = self.model.inference(prompt=prompt.get_str_prompt(), **kwargs) 
+
         return ComponentOutput(
-            images=self.model.inference(prompt=prompt.get_str_prompt(), **self.kwargs),
-            prompts=[prompt]
+            images=images,
+            prompts=[prompt],
+            comp_name=self.__class__.__name__,
+            kwargs=kwargs
         )
     
     def check_inputs(self):
