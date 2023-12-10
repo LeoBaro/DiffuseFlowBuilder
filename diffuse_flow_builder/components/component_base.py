@@ -3,12 +3,14 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 from diffuse_flow_builder.components.component_output import ComponentOutput
+from diffuse_flow_builder.prompts.prompt import PromptRandomizer
 from diffuse_flow_builder.utils.constant import ROOT
 
 class ComponentBase(ABC):
     def __init__(self, **kwargs):
         self.model_class_name = kwargs["model"]
         self.kwargs = kwargs
+        self.prompt_randomizer = PromptRandomizer(ROOT / "diffuse_flow_builder" / "default_configs" / "prompts.yaml")
         self.expand_root_dir()
 
     @abstractmethod
@@ -43,8 +45,7 @@ class ComponentBase(ABC):
         required_params = [
             "name", 
             "model", 
-            "static_prompt", 
-            "use_random_prompt",
+            "prompt", 
             "use_prompt_from_previous_step",
             "combine_prompt_with_previous_step",
             "apply_refinement", 

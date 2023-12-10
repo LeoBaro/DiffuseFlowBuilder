@@ -1,0 +1,52 @@
+what:
+  - "An image of"
+  - "A photograph of"
+  - "A picture of"
+  - "A graphic of"
+
+background:
+  - "a lake"
+  - "a beach"
+  - "a desert"
+  - "a forest"
+  - "a mountain peak"
+  - "a city skyline"
+  - "a tropical island"
+
+view_angle:
+  - "viewed from a low angle"
+  - "viewed from a pedestrian angle"
+  - "viewed from a moving vehicle"
+  - "viewed from a hidden vantage point"
+
+weather:
+  - "in a clear sky"
+  - "in a cloudy day"
+  - "in a rainy day"
+  - "in a snowy landscape"
+  - "in a gentle drizzle"
+
+daytime:
+  - "in the morning"
+  - "in the afternoon"
+  - "during the night"
+  - "at twilight"
+  - "during sunrise"
+  - "during sunset"
+  - "under moonlight"
+
+enanchment:
+  - "ultra detailed"
+  - "hyper  realistic"
+  - "high quality"
+  - "hyper detailed"
+  - "photorealistic"
+  - "8k"
+  - "4k detail post processing"
+
+lens:
+  - "Wide-angle"
+  - "Telephoto"
+  - "24mm"
+  - "EF 70mm"
+

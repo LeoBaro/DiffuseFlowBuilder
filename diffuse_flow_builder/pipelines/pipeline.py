@@ -10,8 +10,9 @@ from diffuse_flow_builder.logger import logger
 import PIL
 
 class Pipeline:
-    def __init__(self, pipeline_id: str = None, output_format: str = "jpg"):
+    def __init__(self, pipeline_id: str = None, write_results_after_x_run: int = 5, output_format: str = "jpg"):
         self.pipeline_id = pipeline_id
+        self.write_results_after_x_run = write_results_after_x_run
         self.output_format = output_format
         self.components : list[ComponentBase] = []
         self.n_components = 0
@@ -20,7 +21,7 @@ class Pipeline:
         return len(self.components) == 0
 
     def is_first_component(self):
-        return len(self.components) == self.n_components
+        return len(self.components) <= self.n_components
 
 
     def run(self, n_runs: int, save_intermediate_results: bool):
@@ -31,23 +32,29 @@ class Pipeline:
 
         while len(self.components) > 0:
             
-            if self.is_first_component():
-                comp = self.components.pop(0) # components are garbage collected after each iteration
-                for _ in range(n_runs):
-                    current_results.append(comp())
-            else:
-                comp = self.components.pop(0) # components are garbage collected after each iteration
-                if len(previous_results) == 0:
-                    raise ValueError(f"Component {comp.get_model_name()} needs input from previous step, but no previous step was found")
-                
-                for comp_output in previous_results:
-                    current_results.append(
-                        comp(
-                            input_obj=comp_output
-                            )
-                    )
+            comp = self.components.pop(0) # components are garbage collected after each iteration
 
-            if (not self.is_last_component() and save_intermediate_results) or self.is_last_component():
+            for i in range(n_runs):
+
+                if not self.is_first_component():
+                    comp_output = previous_results[i]
+                else:
+                    comp_output = None
+                current_results.append(
+                    comp(
+                        input_obj=comp_output
+                    )
+                )
+                if (i % self.write_results_after_x_run) == 0:
+                    logger.info("Writing results to %s", comp.get_output_dir())
+                    self.save_images(
+                        current_results[i-self.write_results_after_x_run:i+1],
+                        comp.get_output_dir(),
+                        comp.get_model_name()
+                    )
+                
+
+            if not self.is_last_component() and save_intermediate_results:
                 self.save_images(current_results, comp.get_output_dir(), comp.get_model_name())
 
             previous_results = deepcopy(current_results)

@@ -23,7 +23,11 @@ class PipelineBuilder:
             raise ValueError(f"Pipeline {pipeline_id} is not present in {config_path} ")
         
         pipeline_config = p_config["pipelines"][pipeline_id]
-        pipe = Pipeline(pipeline_id, output_format=pipeline_config["output_format"])
+        pipe = Pipeline(
+            pipeline_id, 
+            write_results_after_x_run=pipeline_config["write_results_after_x_run"],
+            output_format=pipeline_config["output_format"]
+        )
         logger.info("Building pipeline %s with %s steps", pipeline_id, len(pipeline_config['steps']))
 
         for comp_config in pipeline_config["steps"]:

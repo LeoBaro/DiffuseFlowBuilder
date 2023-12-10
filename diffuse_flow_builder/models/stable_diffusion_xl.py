@@ -14,7 +14,10 @@ from diffuse_flow_builder.logger import logger
 class StableDiffusionXL(HuggingFaceModel):
     # https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_xl
     # https://huggingface.co/docs/diffusers/using-diffusers/sdxl
-    
+    RECOMMENDED_PARAMS = {
+        "height": 1024,
+        "width" : 1024
+    }
     def __init__(self, task, seed=42, device="cuda", cuda_index=0, **kwargs):
         super().__init__(seed, device, cuda_index)
 
@@ -78,6 +81,13 @@ class StableDiffusionXL(HuggingFaceModel):
     def inference(self, **kwargs):
         if self.model_ready is False:
             self.lazy_load(apply_refinement=kwargs["apply_refinement"])
+
+        if kwargs["override_with_recommended_parameters"]:
+            logger.info(f"Overriding config params with {StableDiffusionXL.RECOMMENDED_PARAMS}")
+            for k,v in StableDiffusionXL.RECOMMENDED_PARAMS.items():
+                kwargs[k] = v
+
+        logger.info("Making inference with prompt='%s' image='%s'", kwargs["prompt"], kwargs["image"])
 
         if self.refiner is None:
             return self.model(**kwargs).images

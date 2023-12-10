@@ -43,11 +43,10 @@ pipelines:
 
       - name: TextToImage # The name define the task
         model: StableDiffusionXL # The model to use
-        static_prompt: # prompt is splitted in different parts to allow flexibility with random prompt generation
+        prompt: # prompt is splitted in different parts to allow flexibility with random prompt generation
           prompt_prefix: "an image of a"
           prompt_subject: "city skyline"
           prompt_enanchment: "cyberpunk style, hyper realistic, 8K"
-        use_random_prompt: False # todo be implemented
         use_prompt_from_previous_step: False # the second step of the pipeline may want to use the output of the previous step
         combine_prompt_with_previous_step: False # the second step of the pipeline may want to use the output of the previous step. In this case, if prompt_prefix, prompt_subject or prompt_enanchment is null, it will be overridden from the corresponding prompt part of the previous step. 
         apply_refinement: False # only applies to StableDiffusionXL model 
@@ -63,11 +62,10 @@ pipelines:
         model: StableDiffusionXL
         image: null
         use_image_from_previous_step: True
-        static_prompt:
+        prompt:
           prompt_prefix: null
           prompt_subject: "flying drone"
           prompt_enanchment: null
-        use_random_prompt: False
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: True
         apply_refinement: False
@@ -92,7 +90,7 @@ pipelines:
 
       - name: TextToImage
         model: StableDiffusion2
-        static_prompt:
+        prompt:
           prompt_prefix: "an image of an"
           prompt_subject: "cat"
           prompt_enanchment: "cyberpunk style"
@@ -108,7 +106,7 @@ pipelines:
         model: StableDiffusionXL
         image: null
         use_image_from_previous_step: True
-        static_prompt: null
+        prompt: null
         use_prompt_from_previous_step: True
         combine_prompt_with_previous_step: False
         guidance_scale: 15

@@ -1,5 +1,35 @@
 pipelines:
 
+
+  ip_pipeline:
+    n_runs: 5
+    write_results_after_x_run: 1 # todo
+    save_intermediate_results: False # todo
+    distributed: False # todo
+    output_format: "png"
+    steps:
+      - name: InPainting
+        model: StableDiffusionXL
+        image: /home/leobaro/workspace/labs/DiffuseFlowBuilder/tests/data/test_in_painting/init.png
+        use_image_from_previous_step: False
+        prompt:
+          prompt_prefix: "$what"
+          prompt_subject: "a realistic drone"
+          prompt_enanchment: "view from far away $enanchment"
+        use_prompt_from_previous_step: False
+        combine_prompt_with_previous_step: False # the null prompts parts will be initialized with the prompts part from the previous step
+        apply_refinement: False
+        strength: 0.9
+        guidance_scale: 15
+        num_inference_steps: 75
+        height: 512
+        width: 512
+        override_with_recommended_parameters: True
+        num_images_per_prompt: 1 # greater the number, greater the memory requirement
+        mask_image: null
+        use_random_masks: $ROOT/tests/data/test_in_painting/masks_rect
+        output_dir: $ROOT/output
+
   t2i_pipeline:
     n_runs: 50
     write_results_after_x_run: 1 # todo
@@ -10,11 +40,10 @@ pipelines:
 
       - name: TextToImage
         model: StableDiffusionXL
-        static_prompt:
+        prompt:
           prompt_prefix: "Generate a stable, high-resolution image of a"
           prompt_subject: " nighttime live show. Capture the scene from behind a cheering crowd with a clear view of the stage, which features a black maxi-screen."
           prompt_enanchment: "cyberpunk style, hyper realistic, 8K"
-        use_random_prompt: False
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False 
         apply_refinement: False
@@ -27,7 +56,7 @@ pipelines:
         output_dir: $ROOT/output
 
   sr_pipeline:
-    n_runs: 5
+    n_runs: 1
     write_results_after_x_run: 1 #todo
     save_intermediate_results: False # todo
     distributed: False # todo
@@ -36,17 +65,20 @@ pipelines:
 
       - name: SuperResolution
         model: StableDiffusion2
-        static_prompt:
+        prompt:
           prompt_prefix: "a photo of"
-          prompt_subject: "cat"
-          prompt_enanchment: "hyper realistic"
-        use_random_prompt: False
+          prompt_subject: "two person kissing"
+          prompt_enanchment: "cyberpunk style"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False
-        image: $ROOT/tests/data/test_super_resolution/low_res_cat.png 
+        apply_refinement: False
+        strength: 0.85
+        height: 1024 
+        width: 1024        
+        image: $ROOT/tests/data/test_super_resolution/nicco_michi.jpg 
         use_image_from_previous_step: False
         guidance_scale: 15
-        num_inference_steps: 100
+        num_inference_steps: 60
         num_images_per_prompt: 1
         output_dir: $ROOT/output
 
@@ -61,11 +93,10 @@ pipelines:
 
       - name: TextToImage
         model: StableDiffusionXL
-        static_prompt:
-          prompt_prefix: "an image of a"
-          prompt_subject: "city skyline"
-          prompt_enanchment: "cyberpunk style, hyper realistic, 8K"
-        use_random_prompt: False
+        prompt:
+          prompt_prefix: "$what"
+          prompt_subject: "$background $view_angle $weather $daytime"
+          prompt_enanchment: "cyberpunk style $enanchment"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False 
         apply_refinement: False # only applies to StableDiffusionXL model 
@@ -81,11 +112,10 @@ pipelines:
         model: StableDiffusionXL
         image: null
         use_image_from_previous_step: True
-        static_prompt:
+        prompt:
           prompt_prefix: null
           prompt_subject: "flying drone"
           prompt_enanchment: null
-        use_random_prompt: False
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: True # the null prompts parts will be initialized with the prompts part from the previous step
         apply_refinement: False
@@ -110,7 +140,7 @@ pipelines:
 
       - name: TextToImage
         model: StableDiffusionXL
-        static_prompt:
+        prompt:
           prompt_prefix: "an image of an"
           prompt_subject: "crowded outside night-time show, with a maxi black screen on the stage, the stage is far away."
           prompt_enanchment: "cyberpunk style, hyper realistic, 8K"
@@ -125,7 +155,7 @@ pipelines:
       - name: SuperResolution
         model: StableDiffusionXL
         image: $ROOT/tests/data/test_super_resolution/low_res_cat.png # will be ignored because use_image_from_previous_step is True
-        static_prompt: # will be ignored because use_image_from_previous_step is True
+        prompt: # will be ignored because use_image_from_previous_step is True
           prompt_prefix: "a photo of"
           prompt_subject: "cat"
           prompt_enanchment: "cyberpunk style, hyper realistic"

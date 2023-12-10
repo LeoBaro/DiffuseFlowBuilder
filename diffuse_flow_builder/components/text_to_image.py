@@ -1,3 +1,4 @@
+from copy import deepcopy
 import importlib
 
 import PIL
@@ -27,14 +28,16 @@ class TextToImage(ComponentBase):
 
     def __call__(self, input_obj: ComponentOutput = None) -> list[PIL.Image]:
 
-        self.check_inputs()
+        kwargs = self.check_inputs()
 
-        # if use prompt from previous step...
+        ## Prompts : move to superclass
+        prompt = self.prompt_randomizer.from_dict(kwargs["prompt"])
 
-        # if use random prompt...
+        if kwargs["use_prompt_from_previous_step"]:
+            prompt = input_obj.prompts[-1]
 
-        # This code will be refactored into a PromptManager class
-        prompt = Prompt.from_dict(self.kwargs["static_prompt"])
+        elif kwargs["combine_prompt_with_previous_step"]:
+            prompt = prompt.combine_with(input_obj.prompts[-1])
 
         return ComponentOutput(
             images=self.model.inference(prompt=prompt.get_str_prompt(), **self.kwargs),
@@ -44,6 +47,6 @@ class TextToImage(ComponentBase):
     def check_inputs(self):
         super().check_required_inputs()
 
-        if not self.kwargs["use_random_prompt"] and self.kwargs["static_prompt"] is None:
+        if not self.kwargs["use_prompt_from_previous_step"] and self.kwargs["prompt"] is None:
             raise ValueError("Prompt is empty")
-        
+        return deepcopy(self.kwargs)

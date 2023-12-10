@@ -7,7 +7,7 @@ from pathlib import Path
 import PIL
 from diffusers.utils import load_image
 
-from diffuse_flow_builder.prompts.prompt import Prompt
+from diffuse_flow_builder.prompts.prompt import PromptRandomizer
 from diffuse_flow_builder.components.component_base import ComponentBase
 from diffuse_flow_builder.components.component_output import ComponentOutput
 
@@ -19,7 +19,8 @@ class InPainting(ComponentBase):
     """
     available_models =[
         "StableDiffusion2",
-        "StableDiffusionXL"
+        "StableDiffusionXL",
+        "StableDiffusionXLTurbo"
     ]
     
     def __init__(self, **kwargs):
@@ -34,27 +35,22 @@ class InPainting(ComponentBase):
 
     def __call__(self, input_obj: ComponentOutput = None) -> list[PIL.Image]:
 
-        self.check_inputs()
-
-        kwargs = deepcopy(self.kwargs)
+        kwargs = self.check_inputs()
 
         if kwargs["use_image_from_previous_step"]:
             image = input_obj.images[-1]
         else:
             image = load_image(str(kwargs["image"]))
 
-        # This code will be refactored into a PromptManager class
-        prompt = Prompt.from_dict(kwargs["static_prompt"])
+        ## Prompts : move to superclass
+        prompt = self.prompt_randomizer.from_dict(kwargs["prompt"])
 
-        ## Prompts
         if kwargs["use_prompt_from_previous_step"]:
-            prompt = input_obj.prompts[-1].get_str_prompt()
+            prompt = input_obj.prompts[-1]
 
         elif kwargs["combine_prompt_with_previous_step"]:
-            prompt = prompt.combine_with(input_obj.prompts[-1]).get_str_prompt()
+            prompt = prompt.combine_with(input_obj.prompts[-1])
 
-        elif kwargs["use_random_prompt"]:
-            raise NotImplementedError("Random prompt is not implemented yet")
 
         ## Masks
         if kwargs["use_random_masks"]:
@@ -69,8 +65,9 @@ class InPainting(ComponentBase):
         elif kwargs["mask_image"] is not None:
             mask_image = load_image(str(kwargs["mask_image"]))
 
+        mask_image = mask_image.resize(image.size)
         kwargs.pop("image")
-        kwargs.pop("static_prompt")
+        kwargs.pop("prompt")
         kwargs.pop("mask_image")
 
         return ComponentOutput(
@@ -81,7 +78,7 @@ class InPainting(ComponentBase):
     def check_inputs(self):
         super().check_required_inputs()
 
-        if not self.kwargs["use_random_prompt"] and self.kwargs["static_prompt"] is None:
+        if not self.kwargs["use_prompt_from_previous_step"] and self.kwargs["prompt"] is None:
             raise ValueError("No prompt is given")
         
         if self.kwargs["mask_image"] is None and not self.kwargs["use_random_masks"]:
@@ -89,3 +86,5 @@ class InPainting(ComponentBase):
         
         if self.kwargs["image"] is None and not self.kwargs["use_image_from_previous_step"]:
             raise ValueError("No image is given")
+        
+        return deepcopy(self.kwargs)

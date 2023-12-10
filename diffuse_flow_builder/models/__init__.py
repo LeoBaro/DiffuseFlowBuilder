@@ -1,3 +1,3 @@
 from diffuse_flow_builder.models.stable_diffusion_2 import StableDiffusion2
-
 from diffuse_flow_builder.models.stable_diffusion_xl import StableDiffusionXL
+from diffuse_flow_builder.models.stable_diffusion_xl_turbo import StableDiffusionXLTurbo

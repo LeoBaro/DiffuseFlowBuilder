@@ -5,7 +5,7 @@ from diffusers.utils import load_image
 import PIL
 from diffuse_flow_builder.components.component_base import ComponentBase
 from diffuse_flow_builder.components.component_output import ComponentOutput
-from diffuse_flow_builder.prompts.prompt import Prompt
+from diffuse_flow_builder.prompts.prompt import Prompt, PromptRandomizer
 
 class SuperResolution(ComponentBase):
     """
@@ -16,7 +16,7 @@ class SuperResolution(ComponentBase):
     ] 
     unsupported_kwargs = {
         "StableDiffusion2": [
-            "name", "model", "static_prompt", "use_random_prompt", "use_prompt_from_previous_step", "combine_prompt_with_previous_step", "use_image_for_previous_step", "apply_refinement", "strength", "use_image_from_previous_step", "height", "width", "output_dir"
+            "name", "model", "use_prompt_from_previous_step", "combine_prompt_with_previous_step", "use_image_for_previous_step", "apply_refinement", "strength", "use_image_from_previous_step", "height", "width", "output_dir"
         ]
     }       
     
@@ -42,7 +42,7 @@ class SuperResolution(ComponentBase):
             image = PIL.Image.open(kwargs["image"]).convert("RGB")
 
         # This code will be refactored into a PromptManager class
-        prompt = Prompt.from_dict(kwargs["static_prompt"])
+        prompt = self.prompt_randomizer.from_dict(kwargs["prompt"])
 
         ## Prompts
         if kwargs["use_prompt_from_previous_step"]:
@@ -51,9 +51,6 @@ class SuperResolution(ComponentBase):
         elif kwargs["combine_prompt_with_previous_step"]:
             prompt = prompt.combine_with(input_obj.prompts[-1]).get_str_prompt()
 
-        elif kwargs["use_random_prompt"]:
-            raise NotImplementedError("Random prompt is not implemented yet")
-        
         self.remove_unsupported_keywords(
             kwargs,
             SuperResolution.unsupported_kwargs[self.model_class_name]
@@ -73,7 +70,7 @@ class SuperResolution(ComponentBase):
     def check_inputs(self):
         super().check_required_inputs()
 
-        if not self.kwargs["use_random_prompt"] and self.kwargs["static_prompt"] is None:
+        if not self.kwargs["use_prompt_from_previous_step"] and self.kwargs["prompt"] is None:
             raise ValueError("No prompt is given")
         
         if self.kwargs["image"] is None and not self.kwargs["use_image_from_previous_step"]:
