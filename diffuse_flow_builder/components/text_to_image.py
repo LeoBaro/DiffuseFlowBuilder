@@ -46,7 +46,7 @@ class TextToImage(ComponentBase):
             prompt = prompt.combine_with(input_obj.prompts[-1])
 
 
-        images, kwargs = self.model.inference(prompt=prompt.get_str_prompt(), **kwargs) 
+        images, kwargs = self.model.inference(prompt=prompt.get_str_prompt(), **kwargs)
 
         return ComponentOutput(
             images=images,

@@ -57,7 +57,7 @@ class Pipeline:
 
                 if is_last_component and can_save:
                     logger.info("Writing intermidiate results to %s", comp.get_output_dir())
-                    self.save_images(
+                    self.save_images_and_prompts(
                         current_results[i:i+self.write_results_after_x_run],
                         comp.get_output_dir(),
                         comp.get_model_name()
@@ -65,7 +65,7 @@ class Pipeline:
 
                 if not is_last_component and save_intermediate_results and can_save:
                     logger.info("Writing intermidiate results to %s", comp.get_output_dir())
-                    self.save_images(
+                    self.save_images_and_prompts(
                         current_results[i:i+self.write_results_after_x_run],
                         comp.get_output_dir(),
                         comp.get_model_name()
@@ -96,11 +96,21 @@ class Pipeline:
         with open(output_dir / f"{self.pipeline_id}_config_{datetime.fromtimestamp(start_time).strftime('%Y%m%d-%H%M%S')}.yaml", "w") as c:
             yaml.dump(kwargs, c)
 
-    def save_images(self, runs: list[ComponentOutput], output_dir, model_class_name):
+    def save_images_and_prompts(self, runs: list[ComponentOutput], output_dir, model_class_name):
         output_dir.mkdir(parents=True, exist_ok=True)
+        prompts_file = output_dir / f"{self.pipeline_id}_prompts.txt"
+        if not prompts_file.exists():
+            pf = open(prompts_file, "w")
+            pf.write("image_name,prompt\n")
+        else:
+            pf = open(prompts_file, "a")
+
         for i, comp_output in enumerate(runs):
-            for image in comp_output.images:
+            for j, image in enumerate(comp_output.images):
+                if len(comp_output.prompts) == 1:
+                    prompt = comp_output.prompts[0]
+                else:
+                    prompt = comp_output.prompts[j]
                 output_images_path = (Path(output_dir) / f"{self.pipeline_id}_{comp_output.comp_name}_{model_class_name.lower()}_run_{i}_{datetime.now()}.{self.output_format}")
                 image.save(output_images_path)
-
-
+                pf.write(f"{output_images_path.name},{prompt.get_str_prompt()}\n")

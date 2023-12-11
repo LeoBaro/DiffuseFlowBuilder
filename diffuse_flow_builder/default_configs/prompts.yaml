@@ -3,6 +3,9 @@ what:
   - "A photograph of"
   - "A picture of"
   - "A graphic of"
+  - "A drawing of"
+  - "A poster of"
+  - "A 3D rendering of"
 
 where:
   - "a lake"
@@ -12,6 +15,7 @@ where:
   - "a mountain peak"
   - "a city skyline"
   - "a tropical island"
+  - "a sky"
 
 when:
   - "in the morning"
@@ -31,18 +35,17 @@ adjective:
   - "combat"
   - "letal"
   - "armed"
-  - "flying"
   - "black"
   - "black and white"
   - "colored"
   - "camouflage"
 
 view_angle:
-  - "viewed from a long distance"
-  - "viewed from a low angle"
-  - "viewed from a pedestrian angle"
-  - "viewed from a moving vehicle"
-  - "viewed from a hidden vantage point"
+  - "top-down view"
+  - "bottom-up view"
+  - "low angle view"
+  - "in the distance"
+  - "pedestrian angle viewed"
 
 weather:
   - "in a clear sky"

@@ -31,7 +31,7 @@ pipelines:
         output_dir: $ROOT/output/ip_pipeline
 
   t2i_pipeline:
-    n_runs: 5
+    n_runs: 100
     write_results_after_x_run: 1 
     save_intermediate_results: False 
     distributed: False # todo
@@ -43,19 +43,19 @@ pipelines:
         model: StableDiffusionXLTurbo
         prompt:
           prompt_prefix: "$what"
-          prompt_subject: "a $adjective drone is flying over $where $when"
-          prompt_enanchment: "$enanchment"
+          prompt_subject: "a $adjective drone $view_angle is flying over $where $when"
+          prompt_enanchment: "$enanchment $lens"
         use_prompt_from_previous_step: False
         combine_prompt_with_previous_step: False 
         apply_refinement: False
-        strength: 0.2
+        strength: 0.8
         guidance_scale: 0.0
-        num_images_per_prompt: 1
-        num_inference_steps: 1
+        num_images_per_prompt: 5
+        num_inference_steps: 2
         height: 512
         width: 512
         override_with_recommended_parameters: True
-        output_dir: $ROOT/output/t2i_pipeline/sdxl_turbo/test_6
+        output_dir: $ROOT/output/t2i_pipeline/sdxl_turbo/test_large
 
   sr_pipeline:
     n_runs: 1
