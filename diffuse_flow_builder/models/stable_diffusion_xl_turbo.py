@@ -59,6 +59,10 @@ class StableDiffusionXLTurbo(HuggingFaceModel):
     def inference(self, **kwargs):
         if self.model_ready is False:
             self.lazy_load()
+        #else:
+            # optimization: keep the vae in float32 to avoid costly dtype conversions before and after each generation.
+            # From: https://huggingface.co/docs/diffusers/using-diffusers/sdxl_turbo#speed-up-sdxl-turbo-even-more
+            #self.model.upcast_vae()
 
         if kwargs["override_with_recommended_parameters"]:
             logger.info(f"Overriding config params with {StableDiffusionXLTurbo.RECOMMENDED_PARAMS}")

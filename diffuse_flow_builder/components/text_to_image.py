@@ -11,10 +11,12 @@ class TextToImage(ComponentBase):
     """
     Stable Diffusion 2  __call__ params : ?
     Stable Diffusion XL __call__ params : https://huggingface.co/docs/diffusers/api/pipelines/stable_diffusion/stable_diffusion_xl#diffusers.StableDiffusionXLPipeline.__call__
+    
     """
     available_models =[
         "StableDiffusion2",
-        "StableDiffusionXL"
+        "StableDiffusionXL",
+        "StableDiffusionXLTurbo",
     ] 
     
     

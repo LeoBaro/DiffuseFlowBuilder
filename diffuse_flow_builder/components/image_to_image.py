@@ -11,7 +11,8 @@ class ImageToImage(ComponentBase):
     """
     available_models =[
         "StableDiffusion2",
-        "StableDiffusionXL"
+        "StableDiffusionXL",
+        "StableDiffusionXLTurbo"
     ] 
     
     def __init__(self, model_class_name: str):

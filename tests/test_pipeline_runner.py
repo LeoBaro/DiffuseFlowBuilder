@@ -2,7 +2,7 @@ from diffuse_flow_builder.pipelines.pipeline_builder import PipelineBuilder
 from diffuse_flow_builder.pipelines.pipeline_runner import PipelineRunner
 
 
-def test_run_pipeline_t2i(data_dir, output_dir):
+def test_run_pipeline_t2i_only(data_dir, output_dir):
     data_dir = data_dir / "test_pipeline"
     output_dir = output_dir / "test_run_pipeline"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -11,7 +11,7 @@ def test_run_pipeline_t2i(data_dir, output_dir):
 
     PipelineRunner().run_pipeline(data_dir / "pipeline.yaml", pipe)
 
-def test_run_pipeline_sr(data_dir, output_dir):
+def test_run_pipeline_sr_only(data_dir, output_dir):
     data_dir = data_dir / "test_pipeline"
     output_dir = output_dir / "test_run_pipeline"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -20,7 +20,7 @@ def test_run_pipeline_sr(data_dir, output_dir):
 
     PipelineRunner().run_pipeline(data_dir / "pipeline.yaml", pipe)
 
-def test_run_pipeline_ip(data_dir, output_dir):
+def test_run_pipeline_ip_only(data_dir, output_dir):
     data_dir = data_dir / "test_pipeline"
     output_dir = output_dir / "test_run_pipeline"
     output_dir.mkdir(parents=True, exist_ok=True)

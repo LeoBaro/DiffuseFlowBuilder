@@ -22,8 +22,23 @@ when:
   - "during sunset"
   - "under moonlight"
 
+adjective:
+  - "small"
+  - "big"
+  - "military"
+  - "strange"
+  - "regular"
+  - "combat"
+  - "letal"
+  - "armed"
+  - "flying"
+  - "black"
+  - "black and white"
+  - "colored"
+  - "camouflage"
 
 view_angle:
+  - "viewed from a long distance"
   - "viewed from a low angle"
   - "viewed from a pedestrian angle"
   - "viewed from a moving vehicle"
@@ -38,13 +53,14 @@ weather:
 
 enanchment:
   - "ultra detailed"
-  - "hyper  realistic"
+  - "hyper realistic"
   - "high quality"
   - "hyper detailed"
   - "photorealistic"
   - "8k"
   - "4k detail post processing"
-
+  - 50mm portrait photography
+  - hard rim lighting photography--beta --ar 2:3 --beta --upbeta
 lens:
   - "Wide-angle"
   - "Telephoto"

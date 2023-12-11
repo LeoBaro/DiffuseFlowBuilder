@@ -55,8 +55,9 @@ class StableDiffusion2(HuggingFaceModel):
         if load_refiner:
             logger.warning("StableDiffusion2 does not support the refinement operation")
 
-        """
         self.generator = self.get_generator(seed, device, cuda_index)
+
+        """
         self.compel = Compel(
             tokenizer=self.model.tokenizer,
             text_encoder=self.model.text_encoder
@@ -82,6 +83,6 @@ class StableDiffusion2(HuggingFaceModel):
 
         logger.info("Making inference with kwargs='%s'", kwargs)
 
-        return self.model(**kwargs).images, kwargs
+        return self.model(**kwargs, generator=self.generator).images, kwargs
     
 

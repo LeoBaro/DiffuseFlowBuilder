@@ -16,6 +16,8 @@ dependencies = [
     "torchvision",
     "transformers[torch]",
     "diffusers[torch]",
+    "accelerate",
+    "omegaconf",
     "compel",
     "Pillow",
     "tqdm",

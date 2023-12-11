@@ -100,7 +100,7 @@ class Pipeline:
         output_dir.mkdir(parents=True, exist_ok=True)
         for i, comp_output in enumerate(runs):
             for image in comp_output.images:
-                output_images_path = (Path(output_dir) / f"{self.pipeline_id}_{comp_output.comp_name}_{model_class_name.lower()}_run_{i}_{time.strftime('%Y%m%d-%H%M%S')}").with_suffix(f".{self.output_format}")
+                output_images_path = (Path(output_dir) / f"{self.pipeline_id}_{comp_output.comp_name}_{model_class_name.lower()}_run_{i}_{datetime.now()}.{self.output_format}")
                 image.save(output_images_path)
 
 

@@ -37,7 +37,7 @@ class BaseModel(ABC):
         if device is None:
             device = self.device
         if cuda_index is None:
-            cuda_index = self.cuda_index 
+            cuda_index = self.cuda_index
         if device == "cuda":
             generator = torch.Generator(f"{device}:{cuda_index}")
         else:
