@@ -2,6 +2,12 @@
 
 DiffuseFlowBuilder is a versatile YAML-based configuration repository designed to streamline the creation and execution of stable diffusion pipelines. This powerful tool empowers users to effortlessly define and manage pipelines for essential diffusion operations, including text-to-image conversion, in-painting, and super-resolution.
 
+## Features
+* Composable diffusion pipelines via yaml configuration
+* Supporting Text-to-Image, In-Painting, Super-Resolution (more tasks will be supported)
+* Supporting StableDiffusion-2, StableDiffusion-XL, StableDiffusion-XL-Turbo (more models will be supported)
+* Dynamic prompts (randomize the prompts to enhance variability)   
+
 ## Installation
 Create a conda virtual environment if you don't have Python 3.10 installed in your machine
 ```bash
@@ -121,3 +127,8 @@ Launch tests with:
 ```bash
 pytest --disable-warnings -xsvv --pdb tests/test_pipeline_runner.py -k t2i_ip_pipeline
 ```
+
+## Roadmap
+Next features:
+* StyleAlign task
+* Distributed inference 
