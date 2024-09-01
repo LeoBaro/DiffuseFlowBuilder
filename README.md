@@ -25,7 +25,6 @@ Describe a diffusion pipeline with a yaml configuration and execute:
 ```python
 PipelineRunner()
     .run_pipeline(
-        "./pipeline.yaml", 
         PipelineBuilder().build_pipeline(
             "./pipeline.yaml", 
             "t2i_pipeline"
